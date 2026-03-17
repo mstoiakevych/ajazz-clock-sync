@@ -53,26 +53,22 @@ def sync_time():
                 
     return success
 
-def main():
-    was_connected = False
-    
+def main():    
     while True:
         try:
             # Check if any Ajazz dock is currently connected
             is_connected = any(is_target_device(d) for d in hid.enumerate())
             
             # If the dock was just connected (or the hub was switched to Mac)
-            if is_connected and not was_connected:
+            if is_connected:
                 time.sleep(1.5)  # Give macOS a moment to fully initialize the USB device
                 sync_time()
-                
-            was_connected = is_connected
-            
+
         except Exception:
             pass
             
-        # Sleep for 3 seconds to prevent CPU usage
-        time.sleep(3)
+        # Sleep for 5 seconds to prevent CPU usage
+        time.sleep(5)
 
 if __name__ == "__main__":
     main()
