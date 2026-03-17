@@ -85,8 +85,8 @@ let matchCallback: IOHIDDeviceCallback = { context, result, sender, device in
         let upper = productStr.uppercased()
         if upper.contains("AJAZZ") && upper.contains("2.4G") {
             
-            // Give the dock firmware 1.5 seconds to boot up its screen before sending data
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+            // Give the dock firmware 3 seconds to boot up its screen before sending data
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
                 _ = syncTime(to: device)
             }
         }
