@@ -60,8 +60,7 @@ func syncTime(to device: IOHIDDevice) -> Bool {
 // 3. Function for the timer to scan already connected devices
 func syncAllConnected() {
     guard let devicesSet = IOHIDManagerCopyDevices(manager) else { return }
-    guard let nsSet = devicesSet as? NSSet,
-          let devices = nsSet.allObjects as? [IOHIDDevice] else { return }
+    guard let devices = (devicesSet as NSSet).allObjects as? [IOHIDDevice] else { return }
     
     for device in devices {
         if let productProperty = IOHIDDeviceGetProperty(device, kIOHIDProductKey as CFString),
