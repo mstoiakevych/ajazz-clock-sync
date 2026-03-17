@@ -1,0 +1,47 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build-and-release:
+    name: Build & Package
+    runs-on: macos-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Build macOS Swift Binary
+        run: |
+          echo "Building native Swift binary for macOS..."
+          swiftc macOS/main.swift -o macOS/ajazz_daemon -O
+          
+          chmod +x macOS/ajazz_daemon macOS/install.command macOS/uninstall.command
+
+      - name: Package macOS Release
+        run: |
+          echo "Zipping macOS assets..."
+          cd macOS
+          zip -r ../Ajazz-Clock-Sync-macOS.zip ajazz_daemon install.command uninstall.command
+          cd ..
+
+      - name: Package Linux Release
+        run: |
+          echo "Zipping Linux assets..."
+          chmod +x Linux/install.sh Linux/uninstall.sh
+          cd Linux
+          zip -r ../Ajazz-Clock-Sync-Linux.zip ajazz_daemon.py install.sh uninstall.sh
+          cd ..
+
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          files: |
+            Ajazz-Clock-Sync-macOS.zip
+            Ajazz-Clock-Sync-Linux.zip
